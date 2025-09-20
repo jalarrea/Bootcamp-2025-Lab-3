@@ -1,5 +1,6 @@
 # Dependencies
 Frontend/node_modules/
+Backend/node_modules/
 Frontend/package-lock.json
 
 # Production builds
