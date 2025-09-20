@@ -70,3 +70,4 @@ Este proyecto fue desarrollado como parte del Lab 3 del Bootcamp 2025, demostran
 ---
 
 **¡Listo para usar!** 🚀 Navega a la carpeta `Frontend` y ejecuta `npm start` para comenzar.
+
