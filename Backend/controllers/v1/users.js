@@ -1,8 +1,13 @@
 const router = require('express').Router();
 const { query, validationResult} = require('express-validator');
-
+const jwt = require('jsonwebtoken');
 /* Models */
 const Users = require('../../models/users');
+
+/** Middlewares */
+const apiKeyMiddleware = require('../../middlewares/apiKey');
+const basicAuthMiddleware = require('../../middlewares/basicAuth');
+const jwtAuthMiddleware = require('../../middlewares/jwtAuth');
 
 let users = [{
     id: 1,
@@ -10,6 +15,24 @@ let users = [{
     email: 'carlos@gmail.com',
     age: 20
 }];
+
+const jwtSecret = 'thisismysecret';
+/** Middleware  Api Key*/
+//router.use(apiKeyMiddleware)
+/** Middleware  Basic Auth*/
+//router.use(basicAuthMiddleware)
+/** Middleware  JWT*/
+
+router.get('/token', basicAuthMiddleware, (req, res)=> {
+    jwt.sign({ user: req.user }, jwtSecret, { expiresIn: '1h' }, (err, token) => {
+        if(err){
+            return res.status(500).json({ code: 'ER', message: 'Error generating token!'});
+        }
+        res.json({ code: 'OK', message: 'Token generated successfully!', data: { token }});
+    });
+});
+
+router.use(jwtAuthMiddleware);
 
 // Entity: users 
 /** */
@@ -21,6 +44,8 @@ router.get('/', (req, res) => {
         res.json({ code: 'OK', message: 'Users are available!', data:{ users}});
     });
 });
+
+
 
 router.get('/query', query('id').notEmpty(), (req, res) => {
 
@@ -45,9 +70,9 @@ router.get('/query', query('id').notEmpty(), (req, res) => {
 
 router.post('/', (req, res) => {
     console.log('POST /users:',req.body);
-    const { name, email = new Date().getTime()+ '@gmail.com', age } = req.body;
+    const { name, email = new Date().getTime()+ '@gmail.com', age, password, apiKey } = req.body;
 
-    const newUser = { id: new Date().getTime() ,name, email, age };
+    const newUser = { id: new Date().getTime() ,name, email, age, password, apiKey};
 
     return Users.saveUser(newUser, (err, user) => {
         if(err){
@@ -63,10 +88,13 @@ router.put('/:id', (req, res) => {
 
     if(user){
         /** Update user */
-        const { name, emai } = req.body;
+        const { name, email, age, password, apiKey } = req.body;
         user.name = name;
         user.email = email;
-        //user.age = age;
+        user.age = age;
+        user.password = password;
+        user.apiKey = apiKey;
+        
         res.json({ code: 'OK', message: 'User updated successfully!', data: { user}});
         return;
     }

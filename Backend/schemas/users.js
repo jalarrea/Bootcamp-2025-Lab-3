@@ -29,14 +29,22 @@ const userSchema = new mongoose.Schema({
         type: Number,
         required: true,
         min: 0
-    }
+    },
+    password: {
+        type: String,
+        required: true
+    },
+    apiKey: {
+        type: String
+    },
+    role: { type: String, enum:['admin','user'], default:'admin' }
 });
 
 const User = mongoose.model('User', userSchema);
 
 const saveUser = (user, callback) => {
-    const { id, name, email, age } = user;
-    const newUser = new User({ id, name, email, age });
+    const { id, name, email, age, password, apiKey } = user;
+    const newUser = new User({ id, name, email, age, password, apiKey });
     // Guardamos en MongoDB
     newUser.save()
     .then(() => {
@@ -74,6 +82,33 @@ const findUserById = (id, callback) => {
    });
 }
 
+const findUserByApiKey = (apiKey, callback) => { 
+    User.findOne({ apiKey })
+   .then(result => {
+    console.log('🔍 Encontrado:', result);
+    return callback(null, result);
+   })
+   .catch(err => {
+    console.error(err);
+    console.log('🔍 Error:', err);
+    return callback(err);
+   });
+}
+
+const findUserByEmail = (email, callback) => { 
+    User.findOne({ email })
+   .then(result => {
+    console.log('🔍 Encontrado:', result);
+    return callback(null, result);
+   })
+   .catch(err => {
+    console.error(err);
+    console.log('🔍 Error:', err);
+    return callback(err);
+   });
+}
+
+
 const updateUser = (id, user, callback) => { 
     User.findOneAndUpdate({ id }, user, { new: true })
     .then(result => {
@@ -92,5 +127,7 @@ module.exports = {
     saveUser,
     findAllUsers,
     findUserById,
+    findUserByApiKey,
+    findUserByEmail,
     updateUser
 };
