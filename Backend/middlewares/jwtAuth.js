@@ -13,9 +13,12 @@ module.exports = (req, res, next) => {
         return res.status(401).json({ code: 'UA', message: 'Authorization type is not supported!'});
     }
 
-    const { user } = jwt.verify(token, jwtSecret);
-
-    console.log('User decoded:', user);
-    req.user = user;
-    next();
+    return jwt.verify(token, jwtSecret, (error, user)=> {
+        if(error){
+            return res.status(401).json({ code: 'UA', message: 'Invalid token!'});
+        }
+        console.log('User decoded:', user);
+        req.user = user;
+        next();
+    });
 };

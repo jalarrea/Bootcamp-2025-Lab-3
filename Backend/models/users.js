@@ -1,6 +1,22 @@
 const User = require('../schemas/users');
 
 
+const loginUser = (email, password, callback) => {
+    return User.findUserByEmail(email, (err, user) => {
+        if(err){
+            return callback(err);
+        }
+        if(!user){
+            return callback(null, null);
+        }
+        if(user.password !== password){
+            return callback(null, null);
+        }
+        return callback(null, user);
+    });
+};
+
+
 const getAllUsers = (callback) => { 
     return User.findAllUsers(callback);
 }

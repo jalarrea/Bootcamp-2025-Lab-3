@@ -1,12 +1,10 @@
 const router = require('express').Router();
 const { query, validationResult} = require('express-validator');
-const jwt = require('jsonwebtoken');
 /* Models */
 const Users = require('../../models/users');
 
 /** Middlewares */
 const apiKeyMiddleware = require('../../middlewares/apiKey');
-const basicAuthMiddleware = require('../../middlewares/basicAuth');
 const jwtAuthMiddleware = require('../../middlewares/jwtAuth');
 
 let users = [{
@@ -16,21 +14,11 @@ let users = [{
     age: 20
 }];
 
-const jwtSecret = 'thisismysecret';
 /** Middleware  Api Key*/
 //router.use(apiKeyMiddleware)
 /** Middleware  Basic Auth*/
 //router.use(basicAuthMiddleware)
 /** Middleware  JWT*/
-
-router.get('/token', basicAuthMiddleware, (req, res)=> {
-    jwt.sign({ user: req.user }, jwtSecret, { expiresIn: '1h' }, (err, token) => {
-        if(err){
-            return res.status(500).json({ code: 'ER', message: 'Error generating token!'});
-        }
-        res.json({ code: 'OK', message: 'Token generated successfully!', data: { token }});
-    });
-});
 
 router.use(jwtAuthMiddleware);
 
