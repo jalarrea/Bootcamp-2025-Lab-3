@@ -24,6 +24,8 @@
   },
   "homepage": "https://github.com/jalarrea/Bootcamp-2025-Clase-1#readme",
   "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.2",
     "express": "5.1.0",
     "express-session": "^1.18.2",
     "express-validator": "^7.2.1",

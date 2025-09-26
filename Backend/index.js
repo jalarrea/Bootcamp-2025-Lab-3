@@ -1,5 +1,7 @@
+require('dotenv').config();
 const express = require('express');
-const session = require('express-session')
+const session = require('express-session');
+const cors = require('cors');
 /** Db */
 const mongoose = require('./db');
 
@@ -18,8 +20,13 @@ app.use(express.json());
 
 app.use(performance);
 
+app.use(cors({
+    origin: process.env.FRONTEND_URL,
+    credentials: true
+}));
+
 app.use(session({
-    secret: 'esteesmyclavesecreta',
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,   
     cookie: {

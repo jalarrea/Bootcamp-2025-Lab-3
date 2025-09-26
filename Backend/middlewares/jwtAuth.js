@@ -18,7 +18,7 @@ module.exports = (req, res, next) => {
             return res.status(401).json({ code: 'UA', message: 'Invalid token!'});
         }
         console.log('User decoded:', user);
-        req.user = user;
+        req.session.user = user;
         next();
     });
 };

@@ -42,6 +42,7 @@ const updateUser = (id, user, callback) => {
 }
 
 module.exports = {
+    loginUser,
     getAllUsers,
     getUserById,
     getUserByApiKey,

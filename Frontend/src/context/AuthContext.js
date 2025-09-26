@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect } from 'react';
 import { useLocalStorage } from '../hooks/useLocalStorage';
+import Api  from '../services/api';
 
 const AuthContext = createContext();
 
@@ -53,27 +54,23 @@ export const AuthProvider = ({ children }) => {
   };
 
   // Función para iniciar sesión
-  const login = (email, password) => {
+  const login = async (email, password) => {
     console.log('Intentando login con:', { email, password });
-    console.log('Usuarios disponibles para login:', users);
-    
-    const user = users.find(user => {
-      console.log('Comparando con usuario:', { userEmail: user.email, userPassword: user.password });
-      return user.email === email && user.password === password;
-    });
-    
-    if (!user) {
-      console.log('No se encontró usuario con esas credenciales');
+   // console.log('Usuarios disponibles para login:', users);
+    const user = await Api.login(email, password); 
+    if(!user){
       throw new Error('Credenciales incorrectas');
     }
-
-    console.log('Login exitoso para:', user);
+    console.log('Login exitoso:', user);
     setCurrentUser(user);
     return user;
   };
 
   // Función para cerrar sesión
-  const logout = () => {
+  const logout = async () => {
+    console.log('Intentando logout');
+    await Api.logout(); 
+    console.log('Logout exitoso!');
     setCurrentUser(null);
   };
 

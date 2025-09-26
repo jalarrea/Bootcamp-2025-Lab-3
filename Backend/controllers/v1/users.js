@@ -6,6 +6,7 @@ const Users = require('../../models/users');
 /** Middlewares */
 const apiKeyMiddleware = require('../../middlewares/apiKey');
 const jwtAuthMiddleware = require('../../middlewares/jwtAuth');
+const sessionMiddleware = require('../../middlewares/session');
 
 let users = [{
     id: 1,
@@ -20,7 +21,7 @@ let users = [{
 //router.use(basicAuthMiddleware)
 /** Middleware  JWT*/
 
-router.use(jwtAuthMiddleware);
+router.use(sessionMiddleware);
 
 // Entity: users 
 /** */

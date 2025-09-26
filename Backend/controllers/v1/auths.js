@@ -28,8 +28,13 @@ router.post('/login', (req, res)=> {
             return res.status(401).json({ code: 'UA', message: 'Email and password are invalid!'});
         }
         req.session.user = user;
-        res.json({ code: 'OK', message: 'Login successfully!', data: { user: req.user }});
+        res.json({ code: 'OK', message: 'Login successfully!', data: { user }});
     });
+});
+
+router.post('/logout', (req, res)=> {
+    req.session.destroy();
+    res.json({ code: 'OK', message: 'Logout successfully!'});
 });
 
 
